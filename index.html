@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de gasto Calórico (TDEE) - FUNTTIONAL</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+  </script>
+  <style>
+    img {
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logo-funttional.png" alt="Logo FUNTTIONAL" class="logo" />
+    <h1>Calculadora de gasto Calórico (TDEE) - FUNTTIONAL</h1>
+    <form id="form">
+      <label>Idade:</label>
+      <input type="number" id="idade" required />
+
+      <label>Sexo:</label>
+      <select id="sexo">
+        <option value="masculino">Masculino</option>
+        <option value="feminino">Feminino</option>
+      </select>
+
+      <label>Peso (kg):</label>
+      <input type="number" id="peso" required />
+
+      <label>Altura (cm):</label>
+      <input type="number" id="altura" required placeholder="Ex: 172" />
+      <small style="color: gray;">Digite apenas números, sem ponto ou vírgula</small>
+
+      <label>Nível de Atividade:</label>
+      <select id="atividade">
+        <option value="1.2">Sedentário</option>
+        <option value="1.375">Levemente ativo</option>
+        <option value="1.55">Moderadamente ativo</option>
+        <option value="1.725">Muito ativo</option>
+        <option value="1.9">Extremamente ativo</option>
+      </select>
+
+      <label>Objetivo:</label>
+      <select id="objetivo">
+        <option value="manter">Manter peso</option>
+        <option value="emagrecer">Emagrecer</option>
+        <option value="ganhar">Ganhar massa</option>
+      </select>
+
+      <button type="submit">Calcular</button>
+    </form>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const idade = parseInt(document.getElementById("idade").value);
+      const sexo = document.getElementById("sexo").value;
+      const peso = parseFloat(document.getElementById("peso").value);
+      const altura = parseInt(document.getElementById("altura").value);
+      const atividade = parseFloat(document.getElementById("atividade").value);
+      const objetivo = document.getElementById("objetivo").value;
+
+      let tmb = sexo === "masculino"
+        ? 10 * peso + 6.25 * altura - 5 * idade + 5
+        : 10 * peso + 6.25 * altura - 5 * idade - 161;
+
+      const tdee = tmb * atividade;
+      let tdeeAjustado = objetivo === "emagrecer" ? tdee - 500
+                         : objetivo === "ganhar" ? tdee + 500 : tdee;
+
+      const macros = {
+        carboidratos: Math.round((0.5 * tdeeAjustado) / 4),
+        proteinas: Math.round((0.3 * tdeeAjustado) / 4),
+        gorduras: Math.round((0.2 * tdeeAjustado) / 9)
+      };
+
+      document.getElementById("resultado").innerHTML = `
+        <h3>Resultados:</h3>
+        <p><strong>TMB estimada:</strong> ${Math.round(tmb)} kcal</p>
+        <p style="color: gray; margin-top: -10px;">TMB (Taxa Metabólica Basal): energia gasta em repouso.</p>
+
+        <p><strong>TDEE para manutenção:</strong> ${Math.round(tdee)} kcal</p>
+        <p style="color: gray; margin-top: -10px;">TDEE: gasto total considerando suas atividades diárias.</p>
+
+        <p><strong>TDEE ajustado (${objetivo}):</strong> ${Math.round(tdeeAjustado)} kcal</p>
+
+        <h4>Divisão de Macronutrientes:</h4>
+        <ul>
+          <li>Carboidratos: ${macros.carboidratos}g/dia</li>
+          <li>Proteínas: ${macros.proteinas}g/dia</li>
+          <li>Gorduras: ${macros.gorduras}g/dia</li>
+        </ul>
+      `;
+    });
+  </script>
+</body>
+</html>
