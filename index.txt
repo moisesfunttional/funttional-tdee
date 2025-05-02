@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora TDEE - FUNTTIONAL</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <img src="assets/logo-funttional.png" alt="Logo FUNTTIONAL" class="logo" />
+    <h1>Calculadora TDEE</h1>
+    <form id="tdeeForm">
+      <label>Idade: <input type="number" id="idade" required /></label>
+      <label>Peso (kg): <input type="number" id="peso" required /></label>
+      <label>Altura (cm): <input type="number" id="altura" required /></label>
+      <label>Sexo:
+        <select id="sexo">
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+        </select>
+      </label>
+      <label>Nível de atividade:
+        <select id="atividade">
+          <option value="1.2">Sedentário</option>
+          <option value="1.375">Levemente ativo</option>
+          <option value="1.55">Moderadamente ativo</option>
+          <option value="1.725">Muito ativo</option>
+          <option value="1.9">Extremamente ativo</option>
+        </select>
+      </label>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="resultado"></div>
+  </div>
+  <script>
+    document.getElementById("tdeeForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const idade = parseInt(document.getElementById("idade").value);
+      const peso = parseFloat(document.getElementById("peso").value);
+      const altura = parseFloat(document.getElementById("altura").value);
+      const sexo = document.getElementById("sexo").value;
+      const atividade = parseFloat(document.getElementById("atividade").value);
+
+      let tmb;
+      if (sexo === "masculino") {
+        tmb = 10 * peso + 6.25 * altura - 5 * idade + 5;
+      } else {
+        tmb = 10 * peso + 6.25 * altura - 5 * idade - 161;
+      }
+
+      const tdee = tmb * atividade;
+      document.getElementById("resultado").innerHTML = `<h2>Seu TDEE é aproximadamente: ${Math.round(tdee)} kcal/dia</h2>`;
+    });
+  </script>
+</body>
+</html>
